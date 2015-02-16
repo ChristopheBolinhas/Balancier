@@ -12,8 +12,11 @@ import numpy as np
 
 def manage_frame(frame):
     
-    template = cv2.imread("../image/fixe.png")
-    w, h = template.shape[::-1]
+    template = cv2.imread("../images et patterns/fixed.png")
+    w, h = template.shape[:-1]
+    
+    print(w)
+    print(h)
     
 #     img = cv2.imread('messi5.jpg',0)
 #     img2 = img.copy()
@@ -67,6 +70,4 @@ def read_video(video_file):
 
 
 if __name__ == '__main__':
-    
     read_video('../video/exemple.mp4')
-    
