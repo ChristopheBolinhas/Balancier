@@ -1,3 +1,4 @@
 /balancier/.idea
 .pydevproject
 .project
+*.pyc
