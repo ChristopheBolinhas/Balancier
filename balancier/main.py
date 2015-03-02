@@ -7,6 +7,9 @@ Created on 16 févr. 2015
 @author: christophe.bolinhas, mathieu.rosser
 '''
 
+# Query Image => échantillon
+# Train Image => Template, étalon ~~~~> définit trainDescriptors pour matcher
+
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -27,9 +30,9 @@ def init_feature(name):
     elif chunks[0] == 'orb':
         detector = cv2.ORB(400)
         norm = cv2.NORM_HAMMING
-    elif chunks[0] == 'akaze':
-        detector = cv2.AKAZE()
-        norm = cv2.NORM_HAMMING
+#     elif chunks[0] == 'akaze':
+#         detector = cv2.AKAZE()
+#         norm = cv2.NORM_HAMMING
     elif chunks[0] == 'brisk':
         detector = cv2.BRISK()
         norm = cv2.NORM_HAMMING
@@ -167,10 +170,11 @@ def explore_match(win, img1, img2, kp_pairs, status = None, H = None):
 #         cv2.imshow("Detected Point", img)
 
 def manage_frame(frame, ref):
-    detector, matcher = init_feature("sift")
+    detector, matcher = init_feature("orb")
     
-    kp1, desc1 = detector.detectAndCompute(ref, None)
-    kp2, desc2 = detector.detectAndCompute(frame, None)
+    # inversion ref/frame ok?
+    kp1, desc1 = detector.detectAndCompute(frame, None)   # query image
+    kp2, desc2 = detector.detectAndCompute(ref, None)     # train image
     
     def match_and_draw(win):
         print 'matching...'
@@ -186,7 +190,7 @@ def manage_frame(frame, ref):
                 print '%d matches found, not enough for homography estimation' % len(p1)
     
             if len(kp_pairs) > 0:
-                vis = explore_match(win, ref, frame, kp_pairs, status, H)
+                vis = explore_match(win, frame, ref, kp_pairs, status, H)
 
     match_and_draw('find_obj')
 
@@ -195,7 +199,7 @@ def read_video(video_file):
     
     cap = cv2.VideoCapture(video_file)
 
-    ref = cv2.imread("FixedSmall.png", 0)
+    ref = cv2.imread("NewPatternFixed.png", 0)
     
     import time
     
@@ -220,5 +224,5 @@ def read_video(video_file):
 
 if __name__ == '__main__':
     video = '../video/exemple.mp4'
-    video = 1
+    video = 0
     read_video(video)

@@ -115,12 +115,12 @@ def explore_match(win, img1, img2, kp_pairs, status = None, H = None):
             idxs = np.where(m)[0]
             kp1s, kp2s = [], []
             for i in idxs:
-                 (x1, y1), (x2, y2) = p1[i], p2[i]
-                 col = (red, green)[status[i]]
-                 cv2.line(cur_vis, (x1, y1), (x2, y2), col)
-                 kp1, kp2 = kp_pairs[i]
-                 kp1s.append(kp1)
-                 kp2s.append(kp2)
+                (x1, y1), (x2, y2) = p1[i], p2[i]
+                col = (red, green)[status[i]]
+                cv2.line(cur_vis, (x1, y1), (x2, y2), col)
+                kp1, kp2 = kp_pairs[i]
+                kp1s.append(kp1)
+                kp2s.append(kp2)
             cur_vis = cv2.drawKeypoints(cur_vis, kp1s, flags=4, color=kp_color)
             cur_vis[:,w1:] = cv2.drawKeypoints(cur_vis[:,w1:], kp2s, flags=4, color=kp_color)
 
