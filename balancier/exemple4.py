@@ -27,7 +27,7 @@ if __name__ == '__main__':
     
     cap = cv2.VideoCapture(0)
 
-    ref = cv2.imread("FixedSmall.png", 0)
+    ref = cv2.imread("selectivePanorama.jpg", 0)
 
     while cap.isOpened():
         ret, frame = cap.read()

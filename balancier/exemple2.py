@@ -30,7 +30,7 @@ img1 = cv2.imread('NewTerrain.png',0)
 #img1 = cv2.imread('08-IMG_0498.jpg',0)
 #img1 = cv2.imread('10-IMG_0500.jpg',0)
  
-img2 = cv2.imread('NewPatternFixed.png',0)
+img2 = cv2.imread('selectivePanorama.jpg',0)
 #img2 = cv2.imread('rect_template.jpg',0)
 #img2 = cv2.imread('star_template.jpg',0)
  
@@ -83,7 +83,7 @@ def manage_frame(img1, img2):
         pass
 
 
-cap = cv2.VideoCapture("../video/balancier2_cut.mp4")
+cap = cv2.VideoCapture("../video/balancier_motifComplexe.mp4")
 
 while cap.isOpened():
     ret, frame = cap.read()

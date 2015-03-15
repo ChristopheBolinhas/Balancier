@@ -170,7 +170,7 @@ def explore_match(win, img1, img2, kp_pairs, status = None, H = None):
 #         cv2.imshow("Detected Point", img)
 
 def manage_frame(frame, ref):
-    detector, matcher = init_feature("orb")
+    detector, matcher = init_feature("sift")
     
     # inversion ref/frame ok?
     kp1, desc1 = detector.detectAndCompute(frame, None)   # query image
@@ -199,7 +199,7 @@ def read_video(video_file):
     
     cap = cv2.VideoCapture(video_file)
 
-    ref = cv2.imread("FixedSmallOrig.png", 0)
+    ref = cv2.imread("selectivePanorama.jpg", 0)
     
     import time
     
@@ -223,6 +223,6 @@ def read_video(video_file):
 
 
 if __name__ == '__main__':
-    video = '../video/balancier1_cut.mp4'
+    video = '../video/balancier_motifComplexe.mp4'
     #video = 0
     read_video(video)

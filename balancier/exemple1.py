@@ -11,7 +11,7 @@ from find_obj import filter_matches,explore_match
 
 def manage_frame(img1, img2):
     # Initiate SIFT detector
-    orb = cv2.ORB()
+    orb = cv2.SIFT()
     
     # find the keypoints and descriptors with SIFT
     kp1, des1 = orb.detectAndCompute(img1,None)
@@ -28,9 +28,9 @@ def manage_frame(img1, img2):
         pass
 
 img1 = cv2.imread('NewTerrain.png',0)          # queryImage
-img2 = cv2.imread('NewPatternFixed.png',0)     # trainImage
+img2 = cv2.imread('selectivePanorama.jpg',0)     # trainImage
 
-cap = cv2.VideoCapture("../video/balancier2_cut.mp4")
+cap = cv2.VideoCapture("../video/balancier_motifComplexe.mp4")
 
 while cap.isOpened():
     ret, frame = cap.read()
