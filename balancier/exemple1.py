@@ -30,7 +30,7 @@ def manage_frame(img1, img2):
 img1 = cv2.imread('NewTerrain.png',0)          # queryImage
 img2 = cv2.imread('NewPatternFixed.png',0)     # trainImage
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("../video/balancier2_cut.mp4")
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -40,7 +40,7 @@ while cap.isOpened():
     
     img1 = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    manage_frame(img1, img2)
+    manage_frame(img2, img1)
     
     cv2.imshow('frame', img1)
     

@@ -199,7 +199,7 @@ def read_video(video_file):
     
     cap = cv2.VideoCapture(video_file)
 
-    ref = cv2.imread("NewPatternFixed.png", 0)
+    ref = cv2.imread("FixedSmallOrig.png", 0)
     
     import time
     
@@ -211,7 +211,7 @@ def read_video(video_file):
         
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     
-        manage_frame(gray, ref)
+        manage_frame(ref, gray)
         
         cv2.imshow('frame', gray)
         
@@ -223,6 +223,6 @@ def read_video(video_file):
 
 
 if __name__ == '__main__':
-    video = '../video/exemple.mp4'
-    video = 0
+    video = '../video/balancier1_cut.mp4'
+    #video = 0
     read_video(video)
