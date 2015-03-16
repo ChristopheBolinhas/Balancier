@@ -102,7 +102,7 @@ class AppMotifs():
         p1, p2, kp_pairs = filter_matches(kp1, kp2, matches)
         
         try:
-            #explore_match('find_obj', img1,img2,kp_pairs)#cv2 shows image
+            explore_match('find_obj', img1,img2,kp_pairs)#cv2 shows image
             
             mean = [0, 0]
         

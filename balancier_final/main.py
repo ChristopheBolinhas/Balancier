@@ -22,7 +22,7 @@ if __name__ == '__main__':
     except:
         video_src = 0
         
-    color = "R"
+    color = "B"
     show_video = True
     
     AppCircles(video_src, color, show_video).run()
