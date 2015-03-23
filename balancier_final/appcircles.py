@@ -23,6 +23,7 @@ class AppCircles():
         self.frame = None
         self.paused = True
         self.list_centers = []
+		print("Exemple avec split couleur, threshold, ouverture et les cercles de Hough")
         
 
     def run(self):

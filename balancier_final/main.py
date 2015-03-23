@@ -24,6 +24,17 @@ if __name__ == '__main__':
         
     color = "B"
     show_video = True
-    
+	enum_code = "circles"
+    print("Application de calcul de mouvement de balancier")
+	
+	if(show_video):
+		print("Affichage : ON")
+	else
+		print("Affichage : OFF")
+		
+	
+		
+		
+	switch(enum_code)
     AppCircles(video_src, color, show_video).run()
 

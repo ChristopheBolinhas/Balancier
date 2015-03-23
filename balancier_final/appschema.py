@@ -29,6 +29,8 @@ class AppSchema():
         self.rect_sel = common.RectSelector('plane', self.on_rect)
         
         self.list_centers = []
+		print("Exemple avec détection de motif simple, algorithme : Orb")
+		
 
     def on_rect(self, rect):
         self.tracker.clear()

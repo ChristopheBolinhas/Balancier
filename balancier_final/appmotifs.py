@@ -1,7 +1,7 @@
 '''
 Created on 2 mars 2015
 
-@author: mathieu.rosser
+@author: christophe.bolinhas, mathieu.rosser
 '''
 
 # https://gist.github.com/kattern/355d9b27fc29cd195310
@@ -32,7 +32,7 @@ class AppMotifs():
         self.frame = None
         
         self.list_centers = []
-
+		print("Exemple avec détection d'image, algorithme : Sift")
     
     def run(self):
         while self.cap.isOpened():
