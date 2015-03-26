@@ -23,7 +23,7 @@ class AppCircles():
         self.frame = None
         self.paused = True
         self.list_centers = []
-		print("Exemple avec split couleur, threshold, ouverture et les cercles de Hough")
+        print("Exemple avec split couleur, threshold, ouverture et les cercles de Hough")
         
 
     def run(self):
@@ -44,9 +44,9 @@ class AppCircles():
             b, g, r = cv2.split(self.frame)
             ch = b if self.color in "RG" else r
             
-            (retVal, newImg) = cv2.threshold(ch, 90, 255, cv2.THRESH_BINARY)
+            (retVal, img_threshold) = cv2.threshold(ch, 90, 255, cv2.THRESH_BINARY)
             
-            inverse = self.invert(newImg)
+            inverse = self.invert(img_threshold)
             
             erosion = cv2.erode(inverse, kernel_erosion)
             dilatation = cv2.dilate(erosion, kernel_dilatation)
@@ -72,34 +72,20 @@ class AppCircles():
                 timestamp = self.cap.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
                 
                 center_data = CenterData(timestamp, x, y)
-                self.list_centers.append(center_data)
-
-            
-            #if playing:
-                    
-                #balancier.analyze(mean)
-                    
-                    #cv2.waitKey()            
-            
+                self.list_centers.append(center_data)            
             
             if self.show_video:
-                cv2.imshow('plane', self.frame)
-                cv2.imshow('erosion', erosion)
-                cv2.imshow('dilatation', dilatation)
-                cv2.imshow('threshold', newImg)
+                cv2.imshow('Seuillage', img_threshold)
+                cv2.imshow('Dilation apres inversion et erosion', dilatation)
+                cv2.imshow('Analyse balancier par cercle Hough', self.frame)
             
-            #cv2.waitKey()
-
             ch = cv2.waitKey(1)
             if ch == ord(' '):
                 self.paused = not self.paused
             if ch == 27:
                 break
-
-        #print(self.list_centers)
         
-        balancier = Balancier(self.list_centers)
-        balancier.analyze()
+        return Balancier(self.list_centers).analyze()
         
     def invert(self, imagem):
         return (255-imagem)
