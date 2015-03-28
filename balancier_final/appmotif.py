@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 '''
 Created on 2 mars 2015
 
@@ -6,10 +9,8 @@ Created on 2 mars 2015
 
 # https://gist.github.com/kattern/355d9b27fc29cd195310
 
-import numpy as np
 import cv2
-from matplotlib import pyplot as plt
-from find_obj import filter_matches,explore_match
+from find_obj import filter_matches, explore_match
 from balancier import Balancier, CenterData
 
 
@@ -22,7 +23,7 @@ from balancier import Balancier, CenterData
 # img1 is the queryImage
 # img2 is the trainImage
  
-class AppMotifs():
+class AppMotif():
     
     def __init__(self, src_video, src_motif, show_video = True):
         self.img_motif = cv2.imread(src_motif, 0)
@@ -32,8 +33,8 @@ class AppMotifs():
         self.frame = None
         
         self.list_centers = []
-		print("Exemple avec détection d'image, algorithme : Sift")
-    
+        print("Exemple avec détection d'image, algorithme : Sift")
+            
     def run(self):
         while self.cap.isOpened():
             ret, frame = self.cap.read()
@@ -47,12 +48,10 @@ class AppMotifs():
                         
             if cv2.waitKey(20) & 0xFF == ord('q'):
                 break
-            
-        balancier = Balancier(self.list_centers)
-        balancier.analyze()
-
-        cv2.waitKey()
+        
         cv2.destroyAllWindows()
+
+        return Balancier(self.list_centers).analyze()
 
  
     def manage_frame(self, img1, img2):
@@ -80,29 +79,17 @@ class AppMotifs():
         for i,(m,n) in enumerate(matches):
             if m.distance < 0.7*n.distance:
                 matchesMask[i]=[1,0]
-         
-        draw_params = dict(matchColor = (0,255,0),
-                           singlePointColor = (255,0,0),
-                           matchesMask = matchesMask,
-                           flags = 0)
-         
-        # errors if the line below is not commented out
-        #img3 = cv2.drawMatchesKnn(img1,kp1,img2,kp2,matches,None,**draw_params)
-        #img3 = cv2.drawMatches(img1,kp1,img2,kp2,matches[:10], flags=2)
-         
+                  
         # what is the best way to quantify the how strong the match is?
         count_matches = 0
         for i in range(len(matches)):
             if matchesMask[i] == [1,0]:
                 count_matches += 1
-        print count_matches
-        
-        #print matches
          
         p1, p2, kp_pairs = filter_matches(kp1, kp2, matches)
         
         try:
-            explore_match('find_obj', img1,img2,kp_pairs)#cv2 shows image
+            explore_match('Analyse balancier par motif Sift', img1,img2,kp_pairs)#cv2 shows image
             
             mean = [0, 0]
         
@@ -112,8 +99,6 @@ class AppMotifs():
                 
             mean = [m / len(p2) for m in mean]
             
-            print mean
-            print "\n"
             timestamp = self.cap.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
     
             center_data = CenterData(timestamp, mean[0], mean[1])
@@ -123,5 +108,4 @@ class AppMotifs():
             pass
 
 if __name__ == '__main__':
-    
-    AppMotifs("../video/balancier_motifComplexe.mp4", "../balancier/selectivePanorama.jpg", True).run()
+    pass
