@@ -28,7 +28,6 @@ class AppSchema():
         self.rect_sel = RectSelector(self.window_name, self.on_rect)
         
         self.list_centers = []
-        print("Exemple avec détection de motif simple, algorithme : Orb")
 
 
     def on_rect(self, rect):
@@ -70,7 +69,7 @@ class AppSchema():
                     cv2.line(vis, (x0+w, y0), (x1, y1), (0, 255, 0))
                     
                     sumXY[0] += x1
-                    sumXY[0] += y1
+                    sumXY[1] += y1
                     
                 length = len(tracked.p1)
                 mean = (sumXY[0] / length, sumXY[1] / length)

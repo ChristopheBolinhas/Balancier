@@ -19,12 +19,18 @@ class AppCircles():
         self.color = color if color in "RGB" else "R"
         self.show_video = show_video
         
+        self.window_threshold, self.window_dilation, self.window_hough  = 'Seuillage', 'Dilation apres inversion et erosion', 'Analyse balancier par cercle Hough'
+        cv2.namedWindow(self.window_threshold)
+        cv2.namedWindow(self.window_dilation)
+        cv2.namedWindow(self.window_hough)
+        cv2.moveWindow(self.window_threshold, 0, 0)
+        cv2.moveWindow(self.window_dilation, 850, 0)
+        cv2.moveWindow(self.window_hough, 0, 450)
+        
         self.cap = cv2.VideoCapture(src)
         self.frame = None
         self.paused = True
-        self.list_centers = []
-        print("Exemple avec split couleur, threshold, ouverture et les cercles de Hough")
-        
+        self.list_centers = []        
 
     def run(self):
         
@@ -32,7 +38,7 @@ class AppCircles():
         kernel_dilatation = np.ones((13,13),np.uint8)
 
         while True:
-            playing = True#not self.paused
+            playing = True
             
             if playing or self.frame is None:
                 ret, frame = self.cap.read()
@@ -40,7 +46,6 @@ class AppCircles():
                     break
                 self.frame = frame.copy()
                 
-            #gray = cv2.cvtColor(self.frame, cv2.COLOR_BGR2GRAY)
             b, g, r = cv2.split(self.frame)
             ch = b if self.color in "RG" else r
             
@@ -75,9 +80,9 @@ class AppCircles():
                 self.list_centers.append(center_data)            
             
             if self.show_video:
-                cv2.imshow('Seuillage', img_threshold)
-                cv2.imshow('Dilation apres inversion et erosion', dilatation)
-                cv2.imshow('Analyse balancier par cercle Hough', self.frame)
+                cv2.imshow(self.window_threshold, img_threshold)
+                cv2.imshow(self.window_dilation, dilatation)
+                cv2.imshow(self.window_hough, self.frame)
             
             ch = cv2.waitKey(1)
             if ch == ord(' '):

@@ -12,13 +12,14 @@ import math
 
 class CenterData():
     
-    def __init__(self, timestamp, x, y):
+    def __init__(self, timestamp, x, y, nb_points = 0):
         self.timestamp = timestamp
         self.x = x
         self.y = y
+        self.nb_points = nb_points
         
     def __repr__(self):
-        return "[%f] (%f,%f)\n" %(self.timestamp, self.x, self.y)
+        return "[%f] (%f,%f) - %f\n" %(self.timestamp, self.x, self.y, self.nb_points)
     
 class BalancierData():
     
@@ -73,14 +74,19 @@ class BalancierDataViewer():
 
 class Balancier():
     
+    COUNTER_MARGIN = 4
+    
     def __init__(self, list_centers):
         self.list_centers = list_centers
         
-    def analyze(self):
+    def analyze(self, threshold_nb_points = 0):
+        return self.analyze_by_nb_points(threshold_nb_points) if threshold_nb_points > 0 else self.analyze_by_extremum()
+    
+    def analyze_by_extremum(self):
         is_looking_for_left = True
         list_right_center = []
         list_left_center = []
-        const_counter = 4
+        const_counter = Balancier.COUNTER_MARGIN
         counter = const_counter
         current_max = None
         
@@ -123,6 +129,40 @@ class Balancier():
             last_center = centers_right
         
         return list_balancier_data
+    
+    def analyze_by_nb_points(self, threshold_nb_points):
+        list_max_points = []
+        list_local_max_points = []
+        const_counter = Balancier.COUNTER_MARGIN
+        counter = const_counter
+        
+        for center in self.list_centers:
+            if center.nb_points > threshold_nb_points:
+                list_local_max_points.append(center)
+                counter = const_counter
+            else:
+                counter -= 1
+                
+            if len(list_local_max_points) > 0 and counter == 0:
+                max_points = max(list_local_max_points, key=lambda x: x.nb_points)
+                list_max_points.append(max_points)
+                list_local_max_points = []
+                
+        
+        list_balancier_data = []
+                 
+        for i in range(2, len(list_max_points), 3):
+            current = list_max_points[i]
+            previous_dt = list_max_points[i-2]
+            previous_dx = list_max_points[i-1]
+            
+            dt = abs(current.timestamp - previous_dt.timestamp)
+            dx = abs(current.x - previous_dx.x)
+            balancier_data = BalancierData(dt, dx)
+            list_balancier_data.append(balancier_data)
+        
+        return list_balancier_data
+
 
 if __name__ == '__main__':
     pass

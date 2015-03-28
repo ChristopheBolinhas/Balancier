@@ -33,9 +33,13 @@ class AppMotif():
         self.frame = None
         
         self.list_centers = []
-        print("Exemple avec détection d'image, algorithme : Sift")
+        
+        # Initiate SIFT detector
+        self.sift = cv2.SIFT()
+        
+        self.kpMotif, self.descMotif = self.sift.detectAndCompute(self.img_motif,None)
             
-    def run(self):
+    def run(self, threshold_nb_points = 0):
         while self.cap.isOpened():
             ret, frame = self.cap.read()
             
@@ -43,24 +47,20 @@ class AppMotif():
                 break
             
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        
-            self.manage_frame(self.img_motif, frame)
+            self.manage_frame(frame)
                         
             if cv2.waitKey(20) & 0xFF == ord('q'):
                 break
         
         cv2.destroyAllWindows()
-
-        return Balancier(self.list_centers).analyze()
+        
+        return Balancier(self.list_centers).analyze(threshold_nb_points)
 
  
-    def manage_frame(self, img1, img2):
-        # Initiate SIFT detector
-        sift = cv2.SIFT()
-         
+    def manage_frame(self, image):         
         # find the keypoints and descriptors with SIFT
-        kp1, des1 = sift.detectAndCompute(img1,None)
-        kp2, des2 = sift.detectAndCompute(img2,None)
+        kp1, des1 = self.kpMotif, self.descMotif
+        kp2, des2 = self.sift.detectAndCompute(image,None)
          
         # FLANN parameters
         FLANN_INDEX_KDTREE = 0
@@ -85,11 +85,11 @@ class AppMotif():
         for i in range(len(matches)):
             if matchesMask[i] == [1,0]:
                 count_matches += 1
-         
+                         
         p1, p2, kp_pairs = filter_matches(kp1, kp2, matches)
         
         try:
-            explore_match('Analyse balancier par motif Sift', img1,img2,kp_pairs)#cv2 shows image
+            explore_match('Analyse balancier par motif Sift', self.img_motif, image, kp_pairs)#cv2 shows image
             
             mean = [0, 0]
         
@@ -100,10 +100,10 @@ class AppMotif():
             mean = [m / len(p2) for m in mean]
             
             timestamp = self.cap.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
-    
-            center_data = CenterData(timestamp, mean[0], mean[1])
+                
+            center_data = CenterData(timestamp, mean[0], mean[1], count_matches)
             self.list_centers.append(center_data)
-
+            
         except:
             pass
 
