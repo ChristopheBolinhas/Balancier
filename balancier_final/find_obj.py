@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-Feature-based image matching sample.
+Feature-based image matching OpenCV example.
 
 USAGE
   find_obj.py [--feature=<sift|surf|orb|akaze|brisk>[-flann]] [ <image1> <image2> ]

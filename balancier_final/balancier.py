@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 '''
-Created on 14 mars 2015
-
+Application de calcul de mouvements de balancier
+Classes permettant d'analyser les mouvements de balancier et d'obtenir des résultats mathématiques
 @author: christophe.bolinhas, mathieu.rosser
 '''
 
@@ -11,6 +11,7 @@ Created on 14 mars 2015
 import math
 
 class CenterData():
+    ''' Représente un centre détecté dans une image, à un certain temps, avec un certain nombre de pts de correspondances '''
     
     def __init__(self, timestamp, x, y, nb_points = 0):
         self.timestamp = timestamp
@@ -21,7 +22,9 @@ class CenterData():
     def __repr__(self):
         return "[%f] (%f,%f) - %f\n" %(self.timestamp, self.x, self.y, self.nb_points)
     
+    
 class BalancierData():
+    ''' Représente un résultat d'analyse de balancier: période et distance, permettant de calculer l'angle, la hauteur max et la vitesse '''
     
     def __init__(self, periode, distance):
         self.periode = periode
@@ -50,7 +53,9 @@ class BalancierData():
     def __repr__(self):
         return "(%f [s], %f [°])" %(self.periode, self.distance)
     
+    
 class BalancierDataViewer():
+    ''' Représente un visualisateur des résultats d'analyse de balancier, avec affichage tabulaire des mesures et calculs '''
     
     def __init__(self, list_balancier_data):
         self.list_balancier_data = list_balancier_data
@@ -73,6 +78,9 @@ class BalancierDataViewer():
             i += 1
 
 class Balancier():
+    ''' Classe permettant d'analyse de balancier, à partir de liste de points de centres 
+        Analyse effectuée par les extremums gauche et droite de balancement, 
+        ou par l'identification des points où le nombre de correspondances est maxium '''
     
     COUNTER_MARGIN = 4
     
@@ -83,6 +91,8 @@ class Balancier():
         return self.analyze_by_nb_points(threshold_nb_points) if threshold_nb_points > 0 else self.analyze_by_extremum()
     
     def analyze_by_extremum(self):
+        ''' Analyse balancier en cherchant les extremum gauche (minimum X) et droite (maximum X), avec marge d'erreur de tolérance sous forme de décompteur '''
+        
         is_looking_for_left = True
         list_right_center = []
         list_left_center = []
@@ -131,6 +141,8 @@ class Balancier():
         return list_balancier_data
     
     def analyze_by_nb_points(self, threshold_nb_points):
+        ''' Analyse balancier en cherchant les points de max(correspondances), avec tolérance d'erreur sous forme de décompteur '''
+        
         list_max_points = []
         list_local_max_points = []
         const_counter = Balancier.COUNTER_MARGIN

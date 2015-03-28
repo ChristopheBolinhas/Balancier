@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-This module contains some common routines used by other samples.
+This module contains some common routines used by other OpenCV samples.
 '''
 
 import numpy as np

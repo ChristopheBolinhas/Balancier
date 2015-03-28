@@ -2,11 +2,10 @@
 # -*- coding: utf-8 -*-
 
 '''
-Created on 14 mars 2015
-
+Application de calcul de mouvements de balancier
+Analyse de vidéo de balancier avec des cercles de couleurs RGB et Hough
 @author: christophe.bolinhas, mathieu.rosser
 '''
-
 
 import numpy as np
 import cv2
@@ -14,6 +13,8 @@ from balancier import Balancier, CenterData
 
 
 class AppCircles():
+    ''' Classe analysant une vidéo d'un cercle R/G/B en balanchement, 
+        en utilisant un seuillage, une séparation de couleur RGB, une ouverture et Hough '''
     
     def __init__(self, src, color = "R", show_video = False):
         self.color = color if color in "RGB" else "R"
@@ -33,6 +34,7 @@ class AppCircles():
         self.list_centers = []        
 
     def run(self):
+        ''' exécution de l'analyse video '''
         
         kernel_erosion = np.ones((17,17),np.uint8)
         kernel_dilatation = np.ones((13,13),np.uint8)
@@ -45,17 +47,19 @@ class AppCircles():
                 if not ret:
                     break
                 self.frame = frame.copy()
-                
+            
+            # séparation R/G/B et seuillage   
             b, g, r = cv2.split(self.frame)
             ch = b if self.color in "RG" else r
             
             (retVal, img_threshold) = cv2.threshold(ch, 90, 255, cv2.THRESH_BINARY)
             
+            # ouverture
             inverse = self.invert(img_threshold)
-            
             erosion = cv2.erode(inverse, kernel_erosion)
             dilatation = cv2.dilate(erosion, kernel_dilatation)
             
+            # recherche de cercles Hough
             # cv2.HoughCircles(image, method, dp, minDist[, circles[, param1[, param2[, minRadius[, maxRadius]]]]]) -> circles
             # param1 = canny_threshold
             # param2 = accumulator
@@ -76,6 +80,7 @@ class AppCircles():
                 x, y, r = circles[0]
                 timestamp = self.cap.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
                 
+                # ajout des données balancier
                 center_data = CenterData(timestamp, x, y)
                 self.list_centers.append(center_data)            
             
@@ -90,6 +95,7 @@ class AppCircles():
             if ch == 27:
                 break
         
+        # analyse balancier
         return Balancier(self.list_centers).analyze()
         
     def invert(self, imagem):

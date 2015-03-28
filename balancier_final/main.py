@@ -16,16 +16,19 @@ from balancier import BalancierDataViewer
 if __name__ == '__main__':
     print __doc__
 
-    enum_code = "motif_match"
+    # code de la démo à lancer
+    enum_code = "circle_blue"
     
     if len(sys.argv) > 1:
         enum_code = sys.argv[1]
         
     SHOW_VIDEO = True
-    THRESHOLD_NB_MATCHES = 20
     
+    # seuil de nombre de correspondances trouvées entre motif et image courante
+    THRESHOLD_NB_MATCHES = 20
     # correspondance entre image et monde réel: 375 pixels ---> 0.50 mètres
     RATIO_PIXEL_PER_METER = 375.0 / 0.50
+    # longueur pendule en mètre
     PENDULUM_LENGTH = 0.60
 
     if SHOW_VIDEO:
@@ -35,6 +38,7 @@ if __name__ == '__main__':
     
     balancier_analyze = None
     
+    # lancement de l'analyse des vidéos
     if enum_code == "circle_blue":
         print("Exemple avec split couleur bleue, threshold, ouverture et les cercles de Hough")
         balancier_analyze = AppCircles("../video/balancier_cercleB.mp4", "B", SHOW_VIDEO).run()
@@ -67,6 +71,7 @@ if __name__ == '__main__':
         print("Exemple avec détection de motif complexe par nombre de correspondances, algorithme : Sift")
         balancier_analyze = AppMotif("../video/balancier_motif.mp4", "../balancier/selectivePanorama.jpg", SHOW_VIDEO).run(THRESHOLD_NB_MATCHES)
     
+    # affichage des résultats
     if balancier_analyze is not None:
         BalancierDataViewer(balancier_analyze).view_data(PENDULUM_LENGTH, RATIO_PIXEL_PER_METER)
 

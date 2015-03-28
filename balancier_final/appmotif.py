@@ -2,28 +2,19 @@
 # -*- coding: utf-8 -*-
 
 '''
-Created on 2 mars 2015
-
+Application de calcul de mouvements de balancier
+Analyse de vidéo de balancier avec détection de motifs SIFT
+Basé sur https://gist.github.com/kattern/355d9b27fc29cd195310
 @author: christophe.bolinhas, mathieu.rosser
 '''
-
-# https://gist.github.com/kattern/355d9b27fc29cd195310
 
 import cv2
 from find_obj import filter_matches, explore_match
 from balancier import Balancier, CenterData
-
-
-# this code is taken from the opencv feature matching examples at
-# http://opencv-python-tutroals.readthedocs.org/en/latest/py_tutorials/py_feature2d/py_matcher/py_matcher.html#matcher
-# i swapped out the images
-# note that i had to comment out the graphical output below as i received the error detailed in this post
-# http://stackoverflow.com/questions/20172953/opencv-python-no-drawmatchesknn-function
- 
-# img1 is the queryImage
-# img2 is the trainImage
  
 class AppMotif():
+    ''' Classe d'analyse de vidéo basé sur un motif et détection de points-clés SIFT pour correspondances entre image et motif,
+        soit en détectant les extremums en X (gauche, droite), soit en se basant sur le nombre maximum de correspondances '''
     
     def __init__(self, src_video, src_motif, show_video = True):
         self.img_motif = cv2.imread(src_motif, 0)
@@ -40,6 +31,8 @@ class AppMotif():
         self.kpMotif, self.descMotif = self.sift.detectAndCompute(self.img_motif,None)
             
     def run(self, threshold_nb_points = 0):
+        ''' exécution de l'analyse vidéo, soit par extremums, soit par nombre de correspondances avec seuil de maximum '''
+        
         while self.cap.isOpened():
             ret, frame = self.cap.read()
             
@@ -54,10 +47,13 @@ class AppMotif():
         
         cv2.destroyAllWindows()
         
+        # analyse balancier
         return Balancier(self.list_centers).analyze(threshold_nb_points)
 
  
     def manage_frame(self, image):         
+        ''' analyse d'une image pour correspondance SIFT entre l'image et le motif '''
+        
         # find the keypoints and descriptors with SIFT
         kp1, des1 = self.kpMotif, self.descMotif
         kp2, des2 = self.sift.detectAndCompute(image,None)
@@ -89,7 +85,7 @@ class AppMotif():
         p1, p2, kp_pairs = filter_matches(kp1, kp2, matches)
         
         try:
-            explore_match('Analyse balancier par motif Sift', self.img_motif, image, kp_pairs)#cv2 shows image
+            explore_match('Analyse balancier par motif Sift', self.img_motif, image, kp_pairs)
             
             mean = [0, 0]
         
@@ -100,7 +96,8 @@ class AppMotif():
             mean = [m / len(p2) for m in mean]
             
             timestamp = self.cap.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
-                
+            
+            # données centre pour analyse balancier
             center_data = CenterData(timestamp, mean[0], mean[1], count_matches)
             self.list_centers.append(center_data)
             

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 '''
-Multitarget planar tracking
+Multitarget planar tracking, OpenCV example
 ==================
 
 Example of using features2d framework for interactive video homography matching.
