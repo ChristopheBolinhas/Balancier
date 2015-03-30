@@ -69,7 +69,7 @@ if __name__ == '__main__':
         
     elif enum_code == "motif_match":
         print("Exemple avec détection de motif complexe par nombre de correspondances, algorithme : Sift")
-        balancier_analyze = AppMotif("../video/balancier_motif.mp4", "../balancier/selectivePanorama.jpg", SHOW_VIDEO).run(THRESHOLD_NB_MATCHES)
+        balancier_analyze = AppMotif("../video/balancier_motif.mp4", "../video/selectivePanorama.jpg", SHOW_VIDEO).run(THRESHOLD_NB_MATCHES)
     
     # affichage des résultats
     if balancier_analyze is not None:
